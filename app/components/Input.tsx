@@ -14,7 +14,7 @@ const StyledInput = styled.input`
     border: 1px solid ${colors.primary};
   }
   &::placeholder {
-    color: ${colors.gray4};
+    color: ${colors.gray2};
   }
 `;
 
