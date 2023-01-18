@@ -10,15 +10,20 @@ const StyledInput = styled.input`
   font-size: 16px;
   padding: 0 16px;
   color: ${colors.gray5};
+  transition: all 0.25s ease-in-out;
   &:focus {
     border: 1px solid ${colors.primary};
   }
   &::placeholder {
     color: ${colors.gray2};
   }
+  &:disabled {
+    background: ${colors.gray2};
+    color: ${colors.gray3};
+  }
 `;
 
-export interface Props extends React.HTMLAttributes<HTMLInputElement> {}
+export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {}
 const Input = (props: Props) => {
   return <StyledInput {...props} />;
 };

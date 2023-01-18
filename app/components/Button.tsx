@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react';
+import React, { ButtonHTMLAttributes, HTMLAttributes } from 'react';
 import styled from '@emotion/styled';
 import { colors } from '~/lib/colors';
 import { css } from '@emotion/react';
@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth';
 }
-interface Props extends HTMLAttributes<HTMLButtonElement>, ButtonProps {}
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
 
 const StyledButton = styled.button<ButtonProps>`
   display: flex;
@@ -20,6 +20,10 @@ const StyledButton = styled.button<ButtonProps>`
   font-size: 16px;
   border-radius: 4px;
   font-weight: 600;
+  transition: filter 0.25s ease-in-out;
+  &:disabled {
+    filter: grayscale(0.6);
+  }
   ${(props) =>
     props.layoutMode === 'fullWidth' &&
     css`

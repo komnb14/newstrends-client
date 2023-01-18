@@ -3,12 +3,15 @@ import styled from '@emotion/styled';
 import LabelInput from '~/components/LabelInput';
 import Button from '~/components/Button';
 import QuestionLink from '~/components/QuestionLink';
+import { Form, useTransition } from '@remix-run/react';
+import { useActionData } from 'react-router';
+import useFormLoading from '~/hooks/useFormLoading';
 
 interface Props {
   mode: 'login' | 'register';
 }
 
-const Block = styled.div`
+const Block = styled(Form)`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -57,14 +60,28 @@ const AuthForm = ({ mode }: Props) => {
     buttonText,
     actionLink,
   } = authDescriptions[mode];
+  const isLoading = useFormLoading();
+
   return (
-    <Block>
+    <Block method={'post'}>
       <InputGroup>
-        <LabelInput label={'아이디'} placeholder={usernamePlaceHolder} />
-        <LabelInput label={'비밀번호'} placeholder={passwordPlaceHolder} />
+        <LabelInput
+          label={'아이디'}
+          name={'username'}
+          placeholder={usernamePlaceHolder}
+          disabled={isLoading}
+        />
+        <LabelInput
+          label={'비밀번호'}
+          name={'password'}
+          placeholder={passwordPlaceHolder}
+          disabled={isLoading}
+        />
       </InputGroup>
       <ActionsBox>
-        <Button layoutMode={'fullWidth'}>{buttonText}</Button>
+        <Button type={'submit'} layoutMode={'fullWidth'} disabled={isLoading}>
+          {buttonText}
+        </Button>
         <QuestionLink question={question} name={questionName} to={actionLink} />
       </ActionsBox>
     </Block>

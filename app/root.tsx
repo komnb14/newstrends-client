@@ -1,6 +1,9 @@
-import type { MetaFunction } from '@remix-run/node';
+import type { LoaderArgs, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import GlobalStyle from '~/components/GlobalStyle';
+import { getMyAccount, type User } from '~/lib/api/auth';
+import { setClientCookie } from '~/lib/client';
+import { useLoaderData } from 'react-router';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -8,7 +11,17 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
+export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
+  const cookie = request.headers.get('Cookie');
+  if (!cookie) return null;
+  setClientCookie(cookie);
+  const me = await getMyAccount();
+  return me;
+};
+
 export default function App() {
+  const data = useLoaderData() as User | null;
+  console.log(data);
   return (
     <html lang="en">
       <head>
