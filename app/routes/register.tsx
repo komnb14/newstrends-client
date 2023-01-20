@@ -6,7 +6,8 @@ import FullHeightPage from '~/components/FullHeightPage';
 import AuthForm from '~/components/AuthForm';
 import { ActionArgs, json } from '@remix-run/node';
 import { register } from '~/lib/api/auth';
-import { extractError } from '~/lib/error';
+import { AppError, extractError } from '~/lib/error';
+import { ThrownResponse, useCatch } from '@remix-run/react';
 
 interface ActionData {
   text: string;
@@ -33,18 +34,24 @@ export const action = async ({ request }: ActionArgs) => {
   }
 };
 
-const Register = () => {
+interface Props {
+  error?: AppError;
+}
+
+const Register = ({ error }: Props) => {
   const goBack = useGoBack();
   return (
     <FullHeightPage>
       <Header title={'회원가입'} headerLeft={<HeaderBackButton onClick={goBack} />} />
-      <AuthForm mode={'register'} />
+      <AuthForm mode={'register'} error={error} />
     </FullHeightPage>
   );
 };
 
 export function CatchBoundary() {
-  return <Register />;
+  const caught = useCatch<ThrownResponse<number, AppError>>();
+
+  return <Register error={caught.data} />;
 }
 
 export default Register;

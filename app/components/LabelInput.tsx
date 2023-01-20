@@ -24,9 +24,10 @@ const Label = styled.label<{ focused: boolean }>`
 
 interface Props extends InputProps {
   label: string;
+  errorMessage?: string;
 }
 
-const LabelInput = ({ label, ...rest }: Props) => {
+const LabelInput = ({ label, errorMessage, ...rest }: Props) => {
   const [focused, setFocused] = useState(false);
   const onFocus = useCallback(() => {
     setFocused(true);
@@ -38,7 +39,7 @@ const LabelInput = ({ label, ...rest }: Props) => {
   return (
     <Block>
       <Label focused={focused}>{label}</Label>
-      <Input {...rest} onFocus={onFocus} onBlur={onBlur} />
+      <Input {...rest} onFocus={onFocus} onBlur={onBlur} errorMessage={errorMessage} />
     </Block>
   );
 };

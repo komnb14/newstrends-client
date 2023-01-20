@@ -4,6 +4,7 @@ import GlobalStyle from '~/components/GlobalStyle';
 import { getMyAccount, type User } from '~/lib/api/auth';
 import { setClientCookie } from '~/lib/client';
 import { useLoaderData } from 'react-router';
+import { extractError } from '~/lib/error';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -12,11 +13,20 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
-  const cookie = request.headers.get('Cookie');
-  if (!cookie) return null;
-  setClientCookie(cookie);
-  const me = await getMyAccount();
-  return me;
+  try {
+    const cookie = request.headers.get('Cookie');
+    if (!cookie) return null;
+    setClientCookie(cookie);
+    const me = await getMyAccount();
+    return me;
+  } catch (e) {
+    const error = extractError(e);
+    if (error.name === 'UnAuthorizedError') {
+      console.log(error.payload);
+    }
+  }
+
+  return null;
 };
 
 export default function App() {

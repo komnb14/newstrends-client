@@ -19,7 +19,7 @@ interface ErrorPayloads {
   };
 }
 
-interface AppError {
+export interface AppError {
   statusCode: number;
   message: string;
   name: ErrorName;
@@ -32,7 +32,7 @@ export function isAppError(error: any): error is AppError {
   );
 }
 
-export function extractError(error: any): AppError | null {
+export function extractError(error: any): AppError {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data;
     if (isAppError(data)) {

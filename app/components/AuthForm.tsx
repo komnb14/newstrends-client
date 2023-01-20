@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 import LabelInput from '~/components/LabelInput';
 import Button from '~/components/Button';
 import QuestionLink from '~/components/QuestionLink';
-import { Form, useTransition } from '@remix-run/react';
-import { useActionData } from 'react-router';
+import { Form } from '@remix-run/react';
 import useFormLoading from '~/hooks/useFormLoading';
+import { AppError } from '~/lib/error';
 
 interface Props {
   mode: 'login' | 'register';
+  error?: AppError;
 }
 
 const Block = styled(Form)`
@@ -51,7 +52,7 @@ const authDescriptions = {
   },
 };
 
-const AuthForm = ({ mode }: Props) => {
+const AuthForm = ({ mode, error }: Props) => {
   const {
     usernamePlaceHolder,
     passwordPlaceHolder,
@@ -62,6 +63,13 @@ const AuthForm = ({ mode }: Props) => {
   } = authDescriptions[mode];
   const isLoading = useFormLoading();
 
+  const useNameErrorMessage = useMemo(() => {
+    if (error?.name === 'UserExistsError') {
+      return '이미 존재하는 유저입니다.';
+    }
+    return undefined;
+  }, [error]);
+
   return (
     <Block method={'post'}>
       <InputGroup>
@@ -70,6 +78,7 @@ const AuthForm = ({ mode }: Props) => {
           name={'username'}
           placeholder={usernamePlaceHolder}
           disabled={isLoading}
+          errorMessage={useNameErrorMessage}
         />
         <LabelInput
           label={'비밀번호'}
